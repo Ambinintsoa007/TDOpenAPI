@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info:
+  title: API Simple de Ping
+  version: 1.0.0
+paths:
+  /ping:
+    get:
+      responses:
+        '200':
+          description: succès
+          content:
+            text/plain:
+              schema:
+                example:
+                  type: string
+                  example: pong
