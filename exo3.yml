@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info: 
+  title: Définir un modèle et plusieurs opérations
+  version: 1.0.0
+paths:
+  /tasks:
+                                                      #GET /tasks
+    get:
+      description: retourne une liste de task []
+      responses:
+        '200':
+          description: task list
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+              example:                 
+                - id: 1
+                  title: "faire les courses"
+                  completed: false              
+                - id: 2
+                  title: "promener les chiens"
+                  completed: true
+                                                      #POST /tasks
+    post:
+      summary: create and return a list
+      description: Crée une liste de nouvelles tâches fournies à travers le corps de la requête, et retourne la liste nouvelle créée
+      requestBody:
+          required: true        
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: task list created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/Task'
+                                                    #GET /tasks/{id}
+
+                                                    
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        completed: 
+          type: boolean 
