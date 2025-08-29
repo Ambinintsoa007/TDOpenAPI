@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: Recherche de produit
+  version: 1.0.0
+paths:
+  /products:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/q'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              examples:
+                multiple_products:
+                  value:
+                    - name: yaourt
+                      expiration_datetime: "2025-12-25T00:00:00Z"
+                      price: 1000
+                    - name: rice
+                      expiration_datetime: "2030-01-01T00:00:00Z"
+                      price: 1200.0
+                empty_list:
+                  value: []
+
+components:
+  parameters:
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+    q:
+      in: query
+      name: q
+      schema:
+        type: string
+  schemas:
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+        expiration_datetime:
+          type: string
+          format: date-time
+        price:
+          type: number
