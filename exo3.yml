@@ -4,37 +4,37 @@ info:
   version: 1.0.0
 paths:
   /tasks:
-                                                      #GET /tasks
+    #GET /tasks
     get:
       description: retourne une liste de task []
       responses:
         '200':
           description: task list
-          content: 
+          content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
-              example:                 
+              example:
                 - id: 1
                   title: "faire les courses"
-                  completed: false              
+                  completed: false
                 - id: 2
                   title: "promener les chiens"
                   completed: true
-                                                      #POST /tasks
+                  #POST /tasks
     post:
       summary: create and return a list
       description: Crée une liste de nouvelles tâches fournies à travers le corps de la requête, et retourne la liste nouvelle créée
       requestBody:
-          required: true        
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Task'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
       responses:
         '201':
           description: task list created
@@ -43,10 +43,53 @@ paths:
               schema:
                 type: array
                 items:
-                 $ref: '#/components/schemas/Task'
-                                                    #GET /tasks/{id}
+                  $ref: '#/components/schemas/Task'
+                  #DELETE /tasks/
 
-                                                    
+    delete:
+      responses: 
+        '200':
+          description: task deleted
+
+                  #GET /tasks/{id}
+
+  /tasks/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: take one task by his id
+      responses:
+        '200':
+          description: task by id
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Task'
+        '404':
+          description: there is no task with this id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: 'Task not found'
+
+
+              #DELETE /tasks/{id}
+    delete:
+      responses:
+        '200':
+          description: deleted
+
 
 components:
   schemas:
