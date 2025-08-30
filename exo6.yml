@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Bonnes pratiques sur OAS
+  version: 1.0.0
+paths:
+  /users/{id}:
+    get:
+      description: retourne l'utilisateur avec toutes ses informations
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/UserProfile'
+
+  /users:
+    post:
+      description: Crée une liste d'utilisateurs sans identifiants
+      requestBody:
+        description: liste d'utilisateur à ajouter
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUserProfile'
+        required: true
+      responses:
+        '201':
+          description: liste d'utilisateur créer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProfile'
+
+  /users/{id}/personalInfo:
+    put:
+      description: mets à jour uniquement la partie PersonalInfo
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: info mis à jour
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalInfo'
+        required: true
+      responses:
+        '200':
+          description: mise à jour réussi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInfo'
+
+  /users/{id}/address:
+    put:
+      description: met à jour uniquement l'adresse
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: adresse mis à jour
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+        required: true
+      responses:
+        '200':
+          description: mise à jour réussi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+
+  /users/{id}/preferences:
+    put:
+      description: met à jour uniquement les préferences
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: préferences mis à jour
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preference'
+        required: true
+      responses:
+        '200':
+          description: mise à jour réussi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preference'
+
+
+components:
+  parameters:
+    id:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+  schemas:
+    UserProfile:
+      allOf:
+        - type: object
+          properties:
+            identifier:
+              type: string
+        -  $ref: '#/components/schemas/PersonalInfo'
+        -  $ref: '#/components/schemas/Address'
+        -  $ref: '#/components/schemas/Preference'
+
+    CreateUserProfile:
+      allOf:
+        - $ref: '#/components/schemas/PersonalInfo'
+        -  $ref: '#/components/schemas/Address'
+        -  $ref: '#/components/schemas/Preference'
+
+    PersonalInfo:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+
+    Address:
+      type: object
+      properties:
+        address_street:
+          type: string
+        address_city:
+          type: string
+        address_country:
+          type: string
+        address_postal_code:
+          type: number
+
+    Preference:
+      type: object
+      properties:
+        needs_newsletter:
+          type: boolean
+        language:
+          type: string
+          enum:
+            - mg
+            - fr
+            - eng
