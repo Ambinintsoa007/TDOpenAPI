@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Recherche de produit
+  version: 1.0.0
+paths:
+  /products:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/q'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              examples:
+                multiple_products:
+                  value:
+                    - name: yaourt
+                      expiration_datetime: "2025-12-25T00:00:00Z"
+                      price: 1000
+                    - name: rice
+                      expiration_datetime: "2030-01-01T00:00:00Z"
+                      price: 1200.0
+                empty_list:
+                  value: []
+      tags:
+        - Products
+
+  /orders:
+    get:
+      tags:
+        - Orders
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+      responses:
+        '200':
+          description: Liste paginée des commandes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      tags:
+        - Orders
+      security:
+        - BasicAuth: []
+      requestBody:
+        description: Créer une commande
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+            examples:
+              Order:
+                value:
+                  customer_name: rakoto
+                  creation_datetime: "2024-01-15T00:00:00Z"
+                  total_amount: 2000
+      responses:
+        '201':
+          description: Commande créer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+components:
+  parameters:
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+    q:
+      in: query
+      name: q
+      schema:
+        type: string
+    page:
+      in: query
+      name: page
+      schema:
+        type: integer
+    size:
+      in: query
+      name: size
+      schema:
+        type: integer
+  schemas:
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+        expiration_datetime:
+          type: string
+          format: date-time
+        price:
+          type: number
+    Order:
+      type: object
+      properties:
+        identifier:
+          type: integer
+        customer_name:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+        total_amount:
+          type: number
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+tags:
+  - name: Products
+  - name: Orders
